@@ -22,6 +22,10 @@ app.use(express.static('website'));
 const port = 8030;
 
 
-app.listen(port,()=>{
+
+
+
+
+let startServer = app.listen(port,()=>{ // start the server on the specified port
     console.log("localhost: "+port);
-})
+});
