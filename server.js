@@ -1,5 +1,5 @@
 // Setup empty JS object to act as endpoint for all routes
-projectData = {};
+let projectData = {};
 
 // Require Express to run server and routes
 const express = require('express');
@@ -19,13 +19,28 @@ app.use(express.static('website'));
 
 
 // Setup Server
-const port = 8030;
+const serverPort = 8030;
+
+// *_ Setup routes
+app.get('/tempData',(req,res)=>{ // get route
+    return projectData;
+})
+app.post('/addData',(req,res)=>{
+    let incommingRequestBody = req.body;
+    console.log(incommingRequestBody);
+    if(incommingRequestBody.temperature && incommingRequestBody.date){
+        console.log('passed');
+        projectData = {...incommingRequestBody};
+        console.log('jj',projectData)
+    } else {
+        return 'Something wrong with the submitted info. Please, resubmit it.'
+    }
+})
 
 
 
 
 
-
-let startServer = app.listen(port,()=>{ // start the server on the specified port
-    console.log("localhost: "+port);
+let startServer = app.listen(serverPort,()=>{ // start the server on the specified port
+    console.log("The server ran successfully on localhost:"+port);
 });
