@@ -58,7 +58,7 @@ function generateEvnetListener(event) {
   event.preventDefault();
   let enteredUserZipCode = zip.value,
     userRespns = feelings.value;
-  if (!enteredUserZipCode || !userRespns) {
+  if (!enteredUserZipCode) {
     console.log("Not valid");
     return;
   }
