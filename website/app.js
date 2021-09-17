@@ -1,6 +1,7 @@
 /* Global Variables */
 const openWeatherAppApiKey = "d393766ea183b145c44a75f5a49e4d34",
   openWeatherMapURL = "https://api.openweathermap.org/data/2.5/weather?";
+  let modes = ['loading', 'error', 'loaded'],mode = 0;
 // Create a new date instance dynamically with JS
 let d = new Date();
 let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear(); // *_ getMonth is zero based, which means it strats by zero and ends by 11. So it should be icreased by one.
@@ -58,8 +59,14 @@ function generateEvnetListener(event) {
   event.preventDefault();
   let enteredUserZipCode = zip.value,
     userRespns = feelings.value;
+    mode = 0;
+    entry.className = 'holder entry '+modes[mode];
   if (!enteredUserZipCode) {
-    console.log("Not valid");
+    setTimeout(() => {
+      mode = 1;
+      err.innerText = "Empty ZipCode is not valid!";
+      entry.className = 'holder entry '+modes[mode]; 
+    }, 500);
     return;
   }
   fetchTempInfo(openWeatherMapURL, enteredUserZipCode, openWeatherAppApiKey)
@@ -69,9 +76,14 @@ function generateEvnetListener(event) {
     })
     .then(() => {
       updateUserInterface();
+      console.log(modes[mode])
+      mode = 2;
+      entry.className = 'holder entry '+modes[mode];
     })
-    .catch((err) => {
-      console.log(err);
+    .catch((errr) => {
+      err.innerText = errr;
+      mode = 1;
+      entry.className = 'holder entry '+modes[mode];
     });
 }
 // functions end
