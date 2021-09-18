@@ -59,7 +59,7 @@ body{
 /* *_ Styling data inserted from server by js */
 .entry{
     background: white;
-    height: 180px;
+    min-height: 180px;
     padding: 0;
 }
 .entry > * {

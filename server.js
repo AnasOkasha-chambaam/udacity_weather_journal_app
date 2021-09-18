@@ -27,11 +27,8 @@ app.get("/tempData", (req, res) => {
 });
 app.post("/addData", (req, res) => {
   let incommingRequestBody = req.body;
-  console.log(incommingRequestBody);
   if (incommingRequestBody.temperature && incommingRequestBody.newDate) {
-    console.log("passed");
     projectData = { ...incommingRequestBody };
-    console.log("jj", projectData);
     res.send(true);
   } else {
     res.send("Something wrong with the submitted info. Please, resubmit it.");

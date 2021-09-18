@@ -1,24 +1,38 @@
+
 /* Global Variables */
-const openWeatherAppApiKey = "d393766ea183b145c44a75f5a49e4d34",
+const openWeatherApppersApiKey = "d393766ea183b145c44a75f5a49e4d34",
   openWeatherMapURL = "https://api.openweathermap.org/data/2.5/weather?";
   let modes = ['loading', 'error', 'loaded'],mode = 0;
 // Create a new date instance dynamically with JS
 let d = new Date();
-let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear(); // *_ getMonth is zero based, which means it strats by zero and ends by 11. So it should be icreased by one.
+let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear(); // *_ Note: getMonth is zero based, which means it strats by zero and ends by 11. So it should be icreased by one.
 
 // functions start
+/**
+ * @description - Change the site mode
+ * @param {Integer} currentMode - Its value is (0 for loading), (1 for error), or (2 for loaded)
+ */
+function changeMode(currentMode = mode){
+  mode = currentMode;
+  entry.className = 'holder entry '+modes[mode];
+}
+
 /**
  * @description - Fetch Information about temprature using the 'open weather map' website api
  * @param {String} apiBaseUrl - Base URL of openWeatherMap API
  * @param {Integer}  userZipCode - User zip code
- * @param {String} apiKey - API key
+ * @param {String} persApiKey - API key
  * @returns {Object} tempInfoResp.json() - The weather information for the zipcode entered by user
  */
-async function fetchTempInfo(apiBaseUrl, userZipCode, apiKey) {
+async function fetchTempInfo(apiBaseUrl, userZipCode, persApiKey) {
   let tempInfoResp = await fetch(
-    `${apiBaseUrl}zip=${userZipCode}&appid=${apiKey}`
-  );
-  return await tempInfoResp.json();
+    `${apiBaseUrl}zip=${userZipCode}&appid=${persApiKey}`
+  ),
+  jsonRespData = await tempInfoResp.json();
+  if(jsonRespData.cod!=200){
+    throw new Error(jsonRespData.message)
+  }
+  return jsonRespData;
 }
 
 /**
@@ -27,7 +41,7 @@ async function fetchTempInfo(apiBaseUrl, userZipCode, apiKey) {
  * @param {Object} dataToSend - The object that contains the data which should be sent to the server. These data are 'area temperature', 'current date', 'user response'
  */
 
-async function postDataToServer(postAPIPath, dataToSend) {
+async function postGotDataToServer(postAPIPath, dataToSend) {
   let postResp = await fetch(postAPIPath, {
     method: "POST",
     credentials: "same-origin",
@@ -42,12 +56,12 @@ async function postDataToServer(postAPIPath, dataToSend) {
  * @description - GET the data object from the server and update the UI
  */
 
-async function updateUserInterface() {
+async function updateUIWithRetrivedData() {
   let dataResp = await fetch("/tempData"),
     retrivedDataObject = await dataResp.json();
-  date.innerText = retrivedDataObject.newDate;
-  temp.innerText = retrivedDataObject.temperature;
-  content.innerText = retrivedDataObject.userRespns;
+  date.innerHTML = retrivedDataObject.newDate;
+  temp.innerHTML = retrivedDataObject.temperature;
+  content.innerHTML = retrivedDataObject.userRespns;
 }
 
 /**
@@ -59,31 +73,26 @@ function generateEvnetListener(event) {
   event.preventDefault();
   let enteredUserZipCode = zip.value,
     userRespns = feelings.value;
-    mode = 0;
-    entry.className = 'holder entry '+modes[mode];
+   changeMode(0);
   if (!enteredUserZipCode) {
     setTimeout(() => {
-      mode = 1;
+      changeMode(1); 
       err.innerText = "Empty ZipCode is not valid!";
-      entry.className = 'holder entry '+modes[mode]; 
     }, 500);
     return;
   }
-  fetchTempInfo(openWeatherMapURL, enteredUserZipCode, openWeatherAppApiKey)
+  fetchTempInfo(openWeatherMapURL, enteredUserZipCode, openWeatherApppersApiKey)
     .then((recievedData) => {
       let temperature = recievedData.main.temp;
-      postDataToServer("/addData", { temperature, newDate, userRespns });
+      postGotDataToServer("/addData", { temperature, newDate, userRespns });
     })
     .then(() => {
-      updateUserInterface();
-      console.log(modes[mode])
-      mode = 2;
-      entry.className = 'holder entry '+modes[mode];
+      updateUIWithRetrivedData();
+      changeMode(2);
     })
     .catch((errr) => {
       err.innerText = errr;
-      mode = 1;
-      entry.className = 'holder entry '+modes[mode];
+      changeMode(1);
     });
 }
 // functions end
