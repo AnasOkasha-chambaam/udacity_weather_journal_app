@@ -1,8 +1,9 @@
-
 /* Global Variables */
-const openWeatherApppersApiKey = "d393766ea183b145c44a75f5a49e4d34",
+const openWeatherApppersApiKey =
+    "d393766ea183b145c44a75f5a49e4d34&units=metric",
   openWeatherMapURL = "https://api.openweathermap.org/data/2.5/weather?";
-  let modes = ['loading', 'error', 'loaded'],mode = 0;
+let modes = ["loading", "error", "loaded"],
+  mode = 0;
 // Create a new date instance dynamically with JS
 let d = new Date();
 let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear(); // *_ Note: getMonth is zero based, which means it strats by zero and ends by 11. So it should be icreased by one.
@@ -12,9 +13,9 @@ let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear(); // *
  * @description - Change the site mode
  * @param {Integer} currentMode - Its value is (0 for loading), (1 for error), or (2 for loaded)
  */
-function changeMode(currentMode = mode){
+function changeMode(currentMode = mode) {
   mode = currentMode;
-  entry.className = 'holder entry '+modes[mode];
+  entry.className = "holder entry " + modes[mode];
 }
 
 /**
@@ -26,11 +27,11 @@ function changeMode(currentMode = mode){
  */
 async function fetchTempInfo(apiBaseUrl, userZipCode, persApiKey) {
   let tempInfoResp = await fetch(
-    `${apiBaseUrl}zip=${userZipCode}&appid=${persApiKey}`
-  ),
-  jsonRespData = await tempInfoResp.json();
-  if(jsonRespData.cod!=200){
-    throw new Error(jsonRespData.message)
+      `${apiBaseUrl}zip=${userZipCode}&appid=${persApiKey}`
+    ),
+    jsonRespData = await tempInfoResp.json();
+  if (jsonRespData.cod != 200) {
+    throw new Error(jsonRespData.message);
   }
   return jsonRespData;
 }
@@ -60,7 +61,7 @@ async function updateUIWithRetrivedData() {
   let dataResp = await fetch("/tempData"),
     retrivedDataObject = await dataResp.json();
   date.innerHTML = retrivedDataObject.newDate;
-  temp.innerHTML = retrivedDataObject.temperature;
+  temp.innerHTML = retrivedDataObject.temperature + " <sup>o</sup>C";
   content.innerHTML = retrivedDataObject.userRespns;
 }
 
@@ -73,10 +74,10 @@ function generateEvnetListener(event) {
   event.preventDefault();
   let enteredUserZipCode = zip.value,
     userRespns = feelings.value;
-   changeMode(0);
+  changeMode(0);
   if (!enteredUserZipCode) {
     setTimeout(() => {
-      changeMode(1); 
+      changeMode(1);
       err.innerText = "Empty ZipCode is not valid!";
     }, 500);
     return;
