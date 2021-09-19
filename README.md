@@ -1,10 +1,40 @@
 # Weather-Journal App Project
 
-## Overview
-This project requires you to create an asynchronous web app that uses Web API and user data to dynamically update the UI. 
+## Table of Contents
 
-## Instructions
-This will require modifying the `server.js` file and the `website/app.js` file. You can see `index.html` for element references, and once you are finished with the project steps, you can use `style.css` to style your application to customized perfection.
+- [Title](#weather-journal-app-project)
+- [Project Description](#project-description)
+- [Usage](#usage)
+- [Dependencies](#dependencies)
+- [Dev Dependencies](#dev-dependencies)
 
-## Extras
-If you are interested in testing your code as you go, you can use `tests.js` as a template for writing and running some basic tests for your code.
+## Project Description
+
+- A web app built upon the 'openWeatherApp' api.
+- It is used to get the temperature of the entered zipcode and save the enter user response.
+- The app consists of two main inputs, one for zipcode and the other for user response.
+- It gets the temperature from the 'openWeatherApp' api, store it along with user response on the server, and show it on the UI.
+
+## Usage
+
+Get the temperature of a zipcode using the 'openWeatherApp' api.
+
+## Dependencies
+
+### [Express](https://github.com/expressjs/express):
+
+Fast, unopinionated, minimalist web framework for node.
+
+### [Body-parser](https://github.com/expressjs/body-parser):
+
+Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
+
+### [Cors](https://github.com/expressjs/cors):
+
+CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
+
+## Dev Dependencies
+
+### Nodemon
+
+nodemon is a tool that helps develop node.js based applications by automatically restarting the node application when file changes in the directory are detected.
